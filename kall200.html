@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang=ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>K.A.L.L. 200 | Премьера фильма</title>
+    <!-- Стили в духе блокбастер-кинематографа -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0c12;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+            color: #ededf0;
+            line-height: 1.4;
+        }
+
+        /* Фоновые эффекты (лёгкий градиент / имитация кинозала) */
+        .film-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-radial-gradient(circle at 20% 30%, rgba(0, 0, 0, 0.2) 0px, rgba(0, 0, 0, 0.1) 2px, transparent 3px);
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.8rem 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* обложка/хедер с постерами */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #10131e 0%, #07090f 100%);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .movie-poster {
+            flex: 1;
+            min-width: 220px;
+            text-align: center;
+        }
+
+        .poster-img {
+            background: linear-gradient(145deg, #1e1f2c, #0a0c14);
+            border-radius: 2rem;
+            padding: 1rem;
+            box-shadow: 0 20px 30px -10px black;
+        }
+
+        .poster-img img {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 1.2rem;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .poster-img img:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-title {
+            flex: 2;
+            text-align: left;
+        }
+
+        .hero-title h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFF, #C0A86A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #b9b9e6;
+            border-left: 4px solid #e2b13b;
+            padding-left: 1rem;
+            margin: 1rem 0 1.4rem;
+        }
+
+        .info-badge {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* трейлер секция */
+        .trailer-section {
+            margin: 3rem 0 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title span {
+            background: #e2b13b;
+            width: 8px;
+            height: 32px;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .trailer-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            box-shadow: 0 20px 32px -8px rgba(0, 0, 0, 0.7);
+            background: #000;
+        }
+
+        .trailer-wrapper iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: block;
+            border: none;
+        }
+
+        /* карточки актёров / каст */
+        .cast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .cast-card {
+            background: rgba(18, 22, 35, 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            text-align: center;
+        }
+
+        .cast-card:hover {
+            border-color: rgba(226, 177, 59, 0.6);
+            transform: translateY(-6px);
+            background: #12162a;
+        }
+
+        .cast-img {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2d2f42, #181c2c);
+            overflow: hidden;
+            /* ЭТО ВАЖНО — обрезает всё, что выходит за круг */
+            border: 2px solid #e2b13b70;
+            box-shadow: 0 10px 18px black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cast-img {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2d2f42, #181c2c);
+            overflow: hidden;
+            border: 2px solid #e2b13b70;
+            box-shadow: 0 10px 18px black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cast-img * {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cast-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cast-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .cast-role {
+            font-size: 0.9rem;
+            color: #e2b13b;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .character {
+            font-style: italic;
+            color: #bcbcdf;
+        }
+
+        /* режиссёр и инфо */
+        .director-box,
+        .release-box,
+        .budget-box {
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            border-left: 3px solid #e2b13b;
+        }
+
+        .info-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: space-between;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: #0f1220;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.8rem;
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+            border: 1px solid #2a2e44;
+        }
+
+        .info-card h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #e2b13b;
+            margin-bottom: 0.6rem;
+        }
+
+        .info-card .value {
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .price-highlight {
+            background: linear-gradient(120deg, #1e2a2a, #0a0f1a);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .btn-fake {
+            background: #e2b13b;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #0a0c12;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(226, 177, 59, 0.4);
+        }
+
+        .btn-fake:hover {
+            background: #ffcd6b;
+            transform: scale(0.98);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #22263b;
+            font-size: 0.8rem;
+            color: #6e6e8a;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 1.2rem;
+            }
+
+            .hero-title h1 {
+                font-size: 1.9rem;
+            }
+
+            .cast-name {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="film-grain"></div>
+    <div class="container">
+        <!-- ГЛАВНАЯ ОБЛОЖКА ФИЛЬМА + краткое описание -->
+        <div class="hero">
+            <div class="movie-poster">
+                <div class="poster-img">
+                    <!-- Креативная обложка: синтез персонажей (эффектный постер) -->
+                    <img src="https://kappa.lol/F2YxTl" alt="Постер фильма КАЛЛ 200" style="background: #0f0f1c;">
+                </div>
+            </div>
+            <div class="hero-title">
+                <h1>K.A.L.L. 200</h1>
+                <div class="tagline">«Отряд простых смертных спасают галактику против супергероя в трико. Дерзкий фильм
+                    по книге Ровского Даниила»</div>
+                <div class="info-badge">
+                    <div class="badge">⚡ Фантастика / Драма</div>
+                    <div class="badge">🎬 2026 | 18+</div>
+                    <div class="badge">🌍 Мировая премьера</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ТРЕЙЛЕР (вставка с YouTube placeholder, но можно заменить на реальную ссылку) -->
+        <div class="trailer-section">
+            <div class="section-title">
+                <span></span>
+                <h2>Официальный трейлер</h2>
+            </div>
+            <div class="trailer-wrapper">
+                <!-- Это демо-трейлер-заглушка. Ребята, вы можете вставить настоящую ссылку на видео (YouTube embed) -->
+                <img
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v=QzDNxlG10Es">
+            </div>
+            <p style="margin-top: 12px; font-size: 0.8rem; text-align: center; opacity: 0.7;">⚡ Трейлер 9 апреля 2026
+            </p>
+        </div>
+
+        <!-- КАСТ ГЛАВНЫХ ПЕРСОНАЖЕЙ + ИГОРЬ ВИХОРЬКОВ, АНТОН ЧИГУР, ХОУМЛЕНДЕР, СОЛДАТИК -->
+        <div class="section-title">
+            <span></span>
+            <h2>Главные роли</h2>
+        </div>
+        <div class="cast-grid">
+            <!-- Игорь Вихорьков -->
+            <div class="cast-card">
+                <div class="cast-img">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/ar0/bb66738819e2e35e5a455b69d54600be.jpg"
+                        alt="Игорь Вихорьков">
+                </div>
+                <div class="cast-name">Игорь Вихорьков</div>
+                <div class="cast-role">Главный герой / Тактик</div>
+                <div class="character">«Холодный расчёт и живая совесть»</div>
+            </div>
+            <!-- Антон Чигур -->
+            <div class="cast-card">
+                <div class="cast-img">
+                    <img src="https://i.redd.it/ll9qt5uiq1lf1.jpeg" alt="Антон Чигур">
+                </div>
+                <div class="cast-name">Антон Чигур</div>
+                <div class="cast-role">Напарник / Ударная сила</div>
+                <div class="character">«Импульсивный, но верный друг»</div>
+            </div>
+            <!-- Хоумлендер (антагонист) -->
+            <div class="cast-card">
+                <div class="cast-img">
+                    <img src="https://i.ytimg.com/vi/gFiB1bnGyl0/maxresdefault.jpg" alt="Хоумлендер">
+                </div>
+                <div class="cast-name">Хоумлендер</div>
+                <div class="cast-role">Антигерой / Сверхсила</div>
+                <div class="character">«Супермен с психическими проблемами»</div>
+            </div>
+            <!-- Солдатик -->
+            <div class="cast-card">
+                <div class="cast-img">
+                    <img src="https://pbs.twimg.com/media/G7iQfQdWoAA2NLM.jpg" alt="Солдатик">
+                </div>
+                <div class="cast-name">Солдатик</div>
+                <div class="cast-role">Преданность / Расчетливость</div>
+                <div class="character">«Правая рука Хоумлендера»</div>
+            </div>
+        </div>
+
+        <!-- РЕЖИССЁР, ПРОКАТ, ДАТА ВЫХОДА, СТОИМОСТЬ БИЛЕТОВ / ПРОКАТА -->
+        <div class="info-flex">
+            <div class="info-card">
+                <h4>🎬 Режиссёры</h4>
+                <div class="value">Подобедов Даниил & Ровский Никита</div>
+            </div>
+            <div class="info-card">
+                <h4>📅 Первая дата выхода</h4>
+                <div class="value">1 Сентября 2026</div>
+                <div>широкий прокат с 8.09</div>
+            </div>
+            <div class="info-card">
+                <h4>💰 Стоимость проката (билет)</h4>
+                <div class="value">от 15BYN до 25BYN</div>
+                <div>IMAX / 2D / 3D</div>
+            </div>
+            <div class="info-card">
+                <h4>🌍 Копии для кинотеатров</h4>
+                <div class="value">$42 000 (фильмокопия)</div>
+                <div>лицензионный прокат</div>
+            </div>
+        </div>
+
+        <!-- Блок "Прокатные права и даты премьер" (уточнённые детали) -->
+        <div class="director-box">
+            <h3 style="display: flex; align-items: center; gap: 12px;">📽️ Дополнительная информация о прокате</h3>
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 1rem;">
+                <div><strong>🏆 Страны показа:</strong> СНГ, Европа, Азия, США (цифровой релиз)</div>
+                <div><strong>📀 Форматы:</strong> DCP, 4K, обычный цифровой</div>
+                <div><strong>🎫 Стоимость прав для онлайн-кинотеатров:</strong> по запросу (от 67.000 $)</div>
+            </div>
+        </div>
+
+        <!-- БЛОК СТОИМОСТЬ ПРОКАТА (подробный) -->
+        <div class="price-highlight">
+            <h3>💸 Тарифы проката для кинотеатров (на выбор)</h3>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 1rem;">
+                <div><strong>Стандартный прокат</strong><br> 2 недели — 850$ за копию</div>
+                <div><strong>Расширенный прокат</strong><br> 1 месяц — 1500$ за копию</div>
+                <div><strong>Премиум (IMAX/Долби)</strong><br> 2500$ за показ</div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.8rem;">*Цены указаны за одну кинокопию. Для малых залов —
+                спецпредложения.</p>
+            <!-- декоративная кнопка "купить билет", чисто стиль -->
+            <button class="btn-fake" id="demoTicketBtn">🎟️ Купить билет</button>
+        </div>
+
+        <!-- режиссёрский состав + сценаристы -->
+        <div class="release-box">
+            <h3>🎥 Создатели фильма</h3>
+            <p><strong>Режиссёр-постановщик:</strong> Подобедов Даниил (известный по фильму «Шина»)<br>
+                <strong>Сценарий:</strong> Ровский Даниил (история), Ровский Даниил (диалоги)<br>
+                <strong>Продюсеры:</strong> Кинокомпания "Legacy Film Production"<br>
+                <strong>Художник-постановщик:</strong> Ровский Никита<br>
+                <strong>Композитор:</strong> Александр Пистолетов (саундтрек в стиле retro + оркестр)
+            </p>
+        </div>
+
+        <!-- Дата выхода, полный список стран и стоимости проката ещё раз в виде таблички -->
+        <div style="margin: 2rem 0; background: #0b0e18; border-radius: 1.5rem; padding: 1.2rem;">
+            <h3 style="margin-bottom: 1rem;">🗓️ График релизов и стоимость участия</h3>
+            <div style="overflow-x: auto;">
+                <table style="width:100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 10px; border-bottom: 1px solid #333;">Регион</th>
+                            <th style="padding: 10px; border-bottom: 1px solid #333;">Дата премьеры</th>
+                            <th style="padding: 10px; border-bottom: 1px solid #333;">Цена билета (в валюте)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px;">🇷🇺 Россия</td>
+                            <td style="padding: 8px;">3 сентября 2026</td>
+                            <td style="padding: 8px;">350–750 ₽</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px;">🇧🇾 Беларусь</td>
+                            <td style="padding: 8px;">2 сентября 2026</td>
+                            <td style="padding: 8px;">15–25 BYN</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px;">🇰🇿 Казахстан</td>
+                            <td style="padding: 8px;">4 сентября 2026</td>
+                            <td style="padding: 8px;">2000–4500 KZT</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px;">🌍 Мировой онлайн-прокат</td>
+                            <td style="padding: 8px;">Октябрь 2026</td>
+                            <td style="padding: 8px;">$9.99 (аренда)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- КАСТ + съёмочная группа (дополнение) -->
+        <div class="section-title">
+            <span></span>
+            <h2>Ключевые роли второго плана</h2>
+        </div>
+        <div class="cast-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px,1fr));">
+            <div class="cast-card">
+                <div class="cast-img"><img src="https://static.wikitide.net/deathbattlewiki/8/8b/Portrait.thedeep.png"
+                        alt="Глубина"></div>
+                <div class="cast-name">Глубина</div>
+                <div class="cast-role">Повелитель Семи Морей</div>
+                <div class="character">Союзник Хоумлендера</div>
+            </div>
+            <div class="cast-card">
+                <div class="cast-img"><img src="https://kappa.lol/kZPhk7" alt="Ковалев Руслан"></div>
+                <div class="cast-name">Ковалев Руслан</div>
+                <div class="cast-role">Агент ФСБ</div>
+                <div class="character">Нейтральная сторона</div>
+            </div>
+            <div class="cast-card">
+                <div class="cast-img"><img
+                        src="https://static0.srcdn.com/wordpress/wp-content/uploads/2020/02/Breaking-Bad-things-Walter-White-feature.jpg?w=1600&h=900&fit=crop"
+                        alt="Волтер Вайт"></div>
+                <div class="cast-name">Волтер Вайт</div>
+                <div class="cast-role">Президент</div>
+                <div class="character">Человек системы</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 Кинокомпания «Legacy Film Production» / По мотивам противостояния Игоря Вихорькова и Антона
+                Чигура с
+                Хоумлендером. Все права защищены.<br>
+                *Данные о стоимости проката и датах выхода являются официальными. Скоро в кино!
+            </p>
+        </footer>
+    </div>
+
+    <!-- небольшой скрипт для имитации кнопки (просто алерт) -->
+    <script>
+        (function () {
+            const btn = document.getElementById('demoTicketBtn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    alert('🎬 Билеты поступят в продажу за 2 недели до премьеры! Следите за обновлениями. Ориентировочная стоимость билета от 15BYN.');
+                });
+            }
+            // Добавим лёгкий эффект при загрузке страницы
+            console.log('Сайт фильма "K.A.L.L 200" загружен. Премьера сентябрь 2026!');
+        })();
+    </script>
+</body>
+
+</html>
